@@ -1,6 +1,10 @@
-// Database configuration
-// MongoDB connection setup
+const mongoose = require('mongoose');
 
-module.exports = {
-  // Database connection logic will go here
+const connectDB = async () => {
+  const conn = await mongoose.connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 5000,
+  });
+  console.log(`MongoDB connected: ${conn.connection.host}`);
 };
+
+module.exports = connectDB;
