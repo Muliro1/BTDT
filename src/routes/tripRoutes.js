@@ -1,6 +1,11 @@
-// Trip routes
-// API endpoints for trips
+const express = require('express');
+const router = express.Router();
+const { getAllTrips, getTripById } = require('../controllers/tripController');
 
-module.exports = {
-  // Route definitions will go here
-};
+// GET all trips
+router.get('/', getAllTrips);
+
+// GET single trip by ID
+router.get('/:id', getTripById);
+
+module.exports = router;
