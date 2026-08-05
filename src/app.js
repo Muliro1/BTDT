@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -13,47 +12,35 @@ const connectDB = require('./config/db');
 // Import routes
 const tripRoutes = require('./routes/tripRoutes');
 
+// Import error handler
+const { errorHandler } = require('./middleware/errorHandler');
+
 // Initialize express
 const app = express();
 
-// Middleware
+// Connect to MongoDB
+connectDB();
+
+// ============ MIDDLEWARE ============
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/trips', tripRoutes);
+// ============ ROUTES ============
+// All routes are now handled by tripRoutes
+app.use('/', tripRoutes);  // Mount all routes at root
 
-// Home route
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Travel Journal API',
-    endpoints: {
-      'GET /api/trips': 'Get all trips',
-      'GET /api/trips/:id': 'Get single trip by ID'
-    }
-  });
+// ============ ERROR HANDLING ============
+
+// 404 handler for undefined routes
+app.use((req, res, next) => {
+  const error = new Error(`Route ${req.originalUrl} not found`);
+  error.statusCode = 404;
+  next(error);
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
-});
-
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: err.message || 'Server error'
-  });
-});
-
-// ⚠️ REMOVE the app.listen() from here
-// Server will be started by server.js
+// Global error handler (MUST BE LAST)
+app.use(errorHandler);
 
 module.exports = app;

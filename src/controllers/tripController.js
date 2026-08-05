@@ -1,7 +1,8 @@
 const Trip = require('../models/Trip');
+const { AppError } = require('../middleware/errorHandler');
 
 // ============ GET ALL TRIPS ============
-const getAllTrips = async (req, res) => {
+const getAllTrips = async (req, res, next) => {
   try {
     const trips = await Trip.find().sort({ createdAt: -1 });
     
@@ -11,23 +12,17 @@ const getAllTrips = async (req, res) => {
       data: trips
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    next(error);
   }
 };
 
 // ============ GET SINGLE TRIP BY ID ============
-const getTripById = async (req, res) => {
+const getTripById = async (req, res, next) => {
   try {
     const trip = await Trip.findById(req.params.id);
     
     if (!trip) {
-      return res.status(404).json({
-        success: false,
-        message: 'Trip not found'
-      });
+      return next(new AppError('Trip not found', 404));
     }
     
     res.status(200).json({
@@ -37,16 +32,9 @@ const getTripById = async (req, res) => {
   } catch (error) {
     // Handle invalid ObjectId format
     if (error.kind === 'ObjectId') {
-      return res.status(404).json({
-        success: false,
-        message: 'Trip not found'
-      });
+      return next(new AppError('Trip not found', 404));
     }
-    
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    next(error);
   }
 };
 
