@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
+const methodOverride = require('method-override');
+const path = require('path');
 
 // Load environment variables
 dotenv.config();
@@ -21,15 +23,20 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
+// ============ VIEW ENGINE ============
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 // ============ MIDDLEWARE ============
-app.use(cors());
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors());                          // Enable CORS
+app.use(morgan('dev'));                   // Logging
+app.use(express.json());                  // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(methodOverride('_method'));       // Override HTTP methods (for PUT/DELETE)
+app.use(express.static(path.join(__dirname, 'public'))); // Static files
 
 // ============ ROUTES ============
-// All routes are now handled by tripRoutes
-app.use('/', tripRoutes);  // Mount all routes at root
+app.use('/', tripRoutes);
 
 // ============ ERROR HANDLING ============
 
@@ -44,3 +51,4 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 module.exports = app;
+

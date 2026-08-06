@@ -1,7 +1,131 @@
-//- Create trip form
-//- Form for adding new trips
-
 extends ../layouts/layout
 
 block content
-  //- Create form will go here
+  .form-container
+    .form-header
+      h1
+        i.fas.fa-plus-circle
+        | Add New Trip
+      a.btn-secondary(href="/trips")
+        i.fas.fa-arrow-left
+        | Back to Trips
+    
+    if errors && errors.length > 0
+      .alert.alert-danger
+        i.fas.fa-exclamation-circle
+        ul
+          each error in errors
+            li= error
+    
+    //- Form submits to /trips (HTML endpoint)
+    form.trip-form(action="/trips" method="POST")
+      .form-grid
+        .form-group
+          label(for="destination")
+            i.fas.fa-map-marker-alt
+            | Destination *
+          input#destination(
+            type="text"
+            name="destination"
+            value=trip.destination || ''
+            placeholder="e.g., Paris"
+            required
+          )
+        
+        .form-group
+          label(for="country")
+            i.fas.fa-flag
+            | Country *
+          input#country(
+            type="text"
+            name="country"
+            value=trip.country || ''
+            placeholder="e.g., France"
+            required
+          )
+        
+        .form-group
+          label(for="startDate")
+            i.far.fa-calendar-plus
+            | Start Date *
+          input#startDate(
+            type="date"
+            name="startDate"
+            value=trip.startDate ? new Date(trip.startDate).toISOString().split('T')[0] : ''
+            required
+          )
+        
+        .form-group
+          label(for="endDate")
+            i.far.fa-calendar-check
+            | End Date *
+          input#endDate(
+            type="date"
+            name="endDate"
+            value=trip.endDate ? new Date(trip.endDate).toISOString().split('T')[0] : ''
+            required
+          )
+        
+        .form-group
+          label(for="rating")
+            i.fas.fa-star
+            | Rating (1-5)
+          select#rating(name="rating")
+            option(value="1" selected=trip.rating === 1) ⭐ 1 - Poor
+            option(value="2" selected=trip.rating === 2) ⭐⭐ 2 - Fair
+            option(value="3" selected=trip.rating === 3) ⭐⭐⭐ 3 - Good
+            option(value="4" selected=trip.rating === 4) ⭐⭐⭐⭐ 4 - Great
+            option(value="5" selected=trip.rating === 5) ⭐⭐⭐⭐⭐ 5 - Amazing
+        
+        .form-group
+          label(for="budget")
+            i.fas.fa-money-bill-wave
+            | Budget ($)
+          input#budget(
+            type="number"
+            name="budget"
+            value=trip.budget || ''
+            placeholder="e.g., 2500"
+            min="0"
+            step="50"
+          )
+        
+        .form-group.full-width
+          label(for="photos")
+            i.fas.fa-images
+            | Photo URLs (one per line)
+          textarea#photos(
+            name="photos"
+            rows="3"
+            placeholder="https://picsum.photos/seed/paris/400/300&#10;https://example.com/photo2.jpg"
+          )= trip.photos ? trip.photos.join('\n') : ''
+          small.help-text Add image URLs, one per line
+        
+        .form-group.full-width
+          label(for="highlights")
+            i.fas.fa-list-ul
+            | Highlights (one per line)
+          textarea#highlights(
+            name="highlights"
+            rows="4"
+            placeholder="Eiffel Tower&#10;Louvre Museum&#10;Seine River Cruise"
+          )= trip.highlights ? trip.highlights.join('\n') : ''
+          small.help-text Add trip highlights, one per line
+        
+        .form-group.full-width
+          label(for="notes")
+            i.fas.fa-sticky-note
+            | Notes
+          textarea#notes(
+            name="notes"
+            rows="4"
+            placeholder="Write your travel notes here..."
+          )= trip.notes || ''
+      
+      .form-actions
+        button.btn-primary(type="submit")
+          i.fas.fa-save
+          | Save Trip
+        a.btn-secondary(href="/trips")
+          i.fas.fa-times
+          | Cancel

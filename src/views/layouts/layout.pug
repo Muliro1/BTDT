@@ -1,9 +1,26 @@
-//- Main layout template
-//- Shared layout for all pages
-
 doctype html
-html
+html(lang="en")
   head
-    title Travel Journal
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= title || 'Travel Journal'
+    link(rel="stylesheet" href="/css/style.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
   body
-    //- Content block will go here
+    include ../partials/header
+    
+    main.container
+      if success
+        .alert.alert-success
+          i.fas.fa-check-circle
+          span= success
+      if error
+        .alert.alert-danger
+          i.fas.fa-exclamation-circle
+          span= error
+      
+      block content
+    
+    include ../partials/footer
+    script(src="/js/main.js")
+

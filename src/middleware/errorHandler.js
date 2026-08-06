@@ -26,7 +26,7 @@ const errorHandler = (err, req, res, next) => {
   // Handle Mongoose CastError (Invalid ObjectId)
   if (err.name === 'CastError') {
     statusCode = 404;
-    message = 'Trip not found';
+    message = 'Resource not found';
   }
   
   // Handle Mongoose Validation Errors
@@ -43,7 +43,19 @@ const errorHandler = (err, req, res, next) => {
     message = `${field} already exists. Please use a different value.`;
   }
   
-  // Send error response
+  // Check if request expects JSON or HTML
+  const acceptsHtml = req.accepts('html');
+  const acceptsJson = req.accepts('json');
+  
+  // If HTML is preferred and it's a 404 or 500, render error page
+  if (acceptsHtml && !acceptsJson && (statusCode === 404 || statusCode === 500)) {
+    return res.status(statusCode).render('error', {
+      title: statusCode === 404 ? 'Page Not Found' : 'Server Error',
+      message: message
+    });
+  }
+  
+  // Default: Send JSON response for API
   res.status(statusCode).json({
     success: false,
     message: message,
@@ -56,3 +68,4 @@ module.exports = {
   AppError,
   errorHandler
 };
+
