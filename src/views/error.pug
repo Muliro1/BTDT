@@ -1,7 +1,13 @@
-//- Error page
-//- Displays error messages
-
 extends layouts/layout
 
 block content
-  //- Error page content will go here
+  .error-container
+    .error-content
+      .error-icon
+        i.fas.fa-exclamation-triangle
+      h1.error-title= title || 'Error'
+      p.error-message= message || 'Something went wrong'
+      a.btn-primary(href="/trips")
+        i.fas.fa-home
+        | Back to Trips
+
