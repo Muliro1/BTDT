@@ -8,8 +8,8 @@ router.get('/', (req, res) => {
     message: 'Travel Journal API',
     version: '1.0.0',
     endpoints: {
-      'GET /api/trips': 'Get all trips',
-      'GET /api/trips/:id': 'Get single trip by ID'
+      'GET /trips': 'Get all trips',
+      'GET /trips/:id': 'Get single trip by ID'
     }
   });
 });
