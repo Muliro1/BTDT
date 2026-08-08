@@ -17,8 +17,8 @@ block content
           each error in errors
             li= error
     
-    //- Form submits to /trips (HTML endpoint)
-    form.trip-form(action="/trips" method="POST")
+    //- IMPORTANT: enctype="multipart/form-data" is required for file uploads
+    form.trip-form(action="/trips" method="POST" enctype="multipart/form-data")
       .form-grid
         .form-group
           label(for="destination")
@@ -90,16 +90,19 @@ block content
             step="50"
           )
         
+        //- FILE UPLOAD: Replace URL textarea with file input
         .form-group.full-width
           label(for="photos")
             i.fas.fa-images
-            | Photo URLs (one per line)
-          textarea#photos(
+            | Upload Photos *
+          input#photos(
+            type="file"
             name="photos"
-            rows="3"
-            placeholder="https://picsum.photos/seed/paris/400/300&#10;https://example.com/photo2.jpg"
-          )= trip.photos ? trip.photos.join('\n') : ''
-          small.help-text Add image URLs, one per line
+            accept="image/*"
+            multiple
+            required
+          )
+          small.help-text Max 10 photos, 10MB each. Supported: JPEG, PNG, GIF, WebP
         
         .form-group.full-width
           label(for="highlights")
