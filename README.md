@@ -1,6 +1,13 @@
 # Travel Journal Application
 
 A full-stack travel journal web app for recording trips — destinations, dates, photos, highlights, ratings, budget, and notes.
+## Authors & Contributors
+
+| Name | Role | GitHub |
+| :--- | :--- | :--- |
+| Akinbobola Adefolu | Backend | https://github.com/bobola-one |
+| Muliro Michael Khaemba | Backend | https://github.com/Muliro1 |
+| Harleen Kaur | Frontend | https://github.com/Harleen-Kaur07 |
 
 ## Tech Stack
 
